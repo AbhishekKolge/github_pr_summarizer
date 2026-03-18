@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "mastra": {
+      "source": "mastra-ai/skills",
+      "sourceType": "github",
+      "computedHash": "ce828cab8ed108c6433455cbb2b45afd6323107e845dd85bda198abcbf1aabd1"
+    },
+    "ultracite": {
+      "source": "haydenbleasel/ultracite",
+      "sourceType": "github",
+      "computedHash": "2c53f9413e9ddb97f937b529a4919ae30621fc02076be9a24fe7d70ece7a73d8"
+    }
+  }
+}
