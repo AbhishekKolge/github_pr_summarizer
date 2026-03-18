@@ -1,4 +1,10 @@
 import { Agent } from "@mastra/core/agent";
+import {
+  BatchPartsProcessor,
+  ModerationProcessor,
+  PromptInjectionDetector,
+  UnicodeNormalizer,
+} from "@mastra/core/processors";
 import { Memory } from "@mastra/memory";
 import { prSummaryAgent } from "./pr-summary-agent";
 
@@ -76,6 +82,32 @@ export const prReviewAgent = new Agent({
   agents: {
     prSummaryAgent,
   },
+  inputProcessors: [
+    new UnicodeNormalizer({
+      stripControlChars: true,
+      collapseWhitespace: true,
+    }),
+    new PromptInjectionDetector({
+      model: "anthropic/claude-haiku-4-5",
+      threshold: 0.8,
+      strategy: "rewrite",
+      detectionTypes: ["injection", "jailbreak", "system-override"],
+    }),
+    new ModerationProcessor({
+      model: "anthropic/claude-haiku-4-5",
+      categories: ["hate", "harassment", "violence"],
+      threshold: 0.7,
+      strategy: "block",
+      instructions: "Detect and flag inappropriate content in user messages",
+    }),
+  ],
+  outputProcessors: [
+    new BatchPartsProcessor({
+      batchSize: 5,
+      maxWaitTime: 100,
+      emitOnNonText: true,
+    }),
+  ],
   defaultOptions: {
     maxSteps: 10,
   },
