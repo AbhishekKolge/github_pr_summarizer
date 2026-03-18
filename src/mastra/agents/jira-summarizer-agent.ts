@@ -1,10 +1,11 @@
 import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
+import { getJiraTicket, parseJiraTicket } from "../tools/jira";
 
 export const jiraSummarizerAgent = new Agent({
   id: "jira-summarizer-agent",
   name: "Jira Summarizer Agent",
-  instructions: `You are a product-focused expert translating a Jira ticket into clear, testable requirements.
+  instructions: `You are a product-focused expert translating a Jira ticket into clear, testable requirements. use the tools provided to you to get the Jira title, description and acceptance criteria.
 
       ## INPUT
 
@@ -55,5 +56,9 @@ export const jiraSummarizerAgent = new Agent({
   memory: new Memory(),
   defaultOptions: {
     maxSteps: 10,
+  },
+  tools: {
+    parseJiraTicket,
+    getJiraTicket,
   },
 });

@@ -1,5 +1,4 @@
 import { Agent } from "@mastra/core/agent";
-import { ToolSearchProcessor } from "@mastra/core/processors";
 import { Memory } from "@mastra/memory";
 import {
   getFileContent,
@@ -12,7 +11,7 @@ import {
 export const prSummaryAgent = new Agent({
   id: "pr-summary-agent",
   name: "PR Summary Agent",
-  instructions: `You are a senior software expert summarizing a Pull Request.
+  instructions: `You are a senior software expert summarizing a Pull Request. use the tools provided to you to get the PR title, description, diff, files and content.
 
       ## INPUT
 
@@ -63,16 +62,11 @@ export const prSummaryAgent = new Agent({
   defaultOptions: {
     maxSteps: 10,
   },
-  inputProcessors: [
-    new ToolSearchProcessor({
-      tools: {
-        parseGitHubPRUrl,
-        getPullRequest,
-        getPullRequestDiff,
-        getPullRequestFiles,
-        getFileContent,
-      },
-      search: { topK: 5, minScore: 0.1 },
-    }),
-  ],
+  tools: {
+    parseGitHubPRUrl,
+    getPullRequest,
+    getPullRequestDiff,
+    getPullRequestFiles,
+    getFileContent,
+  },
 });

@@ -13,3 +13,13 @@ export const SKIP_PATTERNS = [
   /\.generated\./,
   /__snapshots__\//,
 ];
+
+export const MAX_ADF_DEPTH = 20;
+
+export const BLOCK_TYPES = [
+  "paragraph",
+  "heading",
+  "listItem",
+  "bulletList",
+  "orderedList",
+];

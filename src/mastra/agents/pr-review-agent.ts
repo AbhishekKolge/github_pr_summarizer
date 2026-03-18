@@ -6,6 +6,7 @@ import {
   UnicodeNormalizer,
 } from "@mastra/core/processors";
 import { Memory } from "@mastra/memory";
+import { jiraSummarizerAgent } from "./jira-summarizer-agent";
 import { prSummaryAgent } from "./pr-summary-agent";
 
 export const prReviewAgent = new Agent({
@@ -13,11 +14,16 @@ export const prReviewAgent = new Agent({
   name: "PR Review Agent",
   instructions: `You are a senior software expert reviewer, reviewing a Pull Request in a collaborative team environment.
 
-      You synthesize outputs from multiple agents:
+      You synthesize outputs from multiple agents in order below:
 
       - PR Summary → what was implemented (using pr-summary-agent)
       - Jira Summary → what was intended (using jira-summarizer-agent)
       - Feature Verification → what actually works (using feature-verifier-agent)
+
+      If user does not provide a Jira ticket ID or URL wait for pr-summary-agent which may have JIRA ticket ID or URL in the description.
+      If pr-summary-agent does not have a JIRA ticket ID or URL, then ask user to provide a Jira ticket ID or URL.
+
+      First you need to analyze the PR summary, jira summary and feature verification to get a comprehensive understanding of the PR.
 
       ## INPUTS
 
@@ -81,6 +87,7 @@ export const prReviewAgent = new Agent({
   memory: new Memory(),
   agents: {
     prSummaryAgent,
+    jiraSummarizerAgent,
   },
   inputProcessors: [
     new UnicodeNormalizer({
