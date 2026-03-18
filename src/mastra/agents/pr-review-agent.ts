@@ -18,12 +18,11 @@ export const prReviewAgent = new Agent({
 
       - PR Summary → what was implemented (using pr-summary-agent)
       - Jira Summary → what was intended (using jira-summarizer-agent)
-      - Feature Verification → what actually works (using feature-verifier-agent)
 
       If user does not provide a Jira ticket ID or URL wait for pr-summary-agent which may have JIRA ticket ID or URL in the description.
       If pr-summary-agent does not have a JIRA ticket ID or URL, then ask user to provide a Jira ticket ID or URL.
 
-      First you need to analyze the PR summary, jira summary and feature verification to get a comprehensive understanding of the PR.
+      First you need to analyze the PR summary and jira summary to get a comprehensive understanding of the PR.
 
       ## INPUTS
 
@@ -33,16 +32,12 @@ export const prReviewAgent = new Agent({
       ### Jira Summary
       {{JIRA_SUMMARY}}
 
-      ### Feature Verification
-      {{FEATURE_VERIFICATION}}
-
       ## TASK
 
       Provide a structured PR review comment that is clear, actionable, and high-signal.
 
       ## DECISION RULES
 
-      - Treat Feature Verification as the source of truth for correctness
       - Treat Jira Summary as the source of truth for requirements
       - Treat PR Summary as the source of truth for implementation details
 
@@ -55,7 +50,7 @@ export const prReviewAgent = new Agent({
       <Short summary of what this PR does and how it aligns with Jira intent>
 
       ### 🔥 Priority Fixes
-      - Most important issues to address first (based on verification)
+      - Most important issues to address first (based on PR summary and jira summary)
 
       ### ✅ What Looks Good
       - Correct implementations
@@ -64,8 +59,8 @@ export const prReviewAgent = new Agent({
       ### ⚠️ Gaps / Mismatches
       - Where implementation does not match requirements
 
-      ### 🧪 Verification Insights
-      - Key findings from verification agent
+      ### 🧪 Verification Insights from comparison of PR summary and jira summary
+      - Key findings from comparison of PR summary and jira summary
 
       ### 🔁 Edge Cases to Consider
       - Real-world scenarios not covered
@@ -82,7 +77,8 @@ export const prReviewAgent = new Agent({
       - Avoid repeating inputs
       - Focus on high-impact feedback
       - Do NOT give approval/rejection verdict
-      - Prioritize clarity over completeness`,
+      - Prioritize clarity over completeness
+      - Do not provide any answers to the user, only provide a review comment.`,
   model: "anthropic/claude-haiku-4-5",
   memory: new Memory(),
   agents: {
